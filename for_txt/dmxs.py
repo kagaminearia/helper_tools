@@ -50,7 +50,7 @@ def save_to_txt(chapter_urls, filename="novel.txt"):
 
 
 if __name__ == "__main__":
-    catalog_url = "https://www.dmxs.org/gdjk/3224.html"
+    catalog_url = "https://www.dmxs.org/xhly/8549.html"
 
     chapter_urls = get_chapter_urls(catalog_url)
 

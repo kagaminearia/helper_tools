@@ -114,5 +114,5 @@ def scrape_novel(index_url: str, output_path: str, start_chapter: int = 1) -> No
                 print(f"  Request failed: {e}")
 
 if __name__ == "__main__":
-    index_url = "https://www.52shuku.net/jiakong/b/bjNAc.html"
-    scrape_novel(index_url, "novel.txt",851)
+    index_url = "https://www.52shuku.net/chongsheng/b/h7Sm.html"
+    scrape_novel(index_url, "novel.txt")
