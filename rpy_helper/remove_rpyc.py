@@ -21,5 +21,5 @@ def remove_rpyc_files(directory: str):
     print(f"Total .rpyc files removed: {count}")
 
 
-dir = "C:\Codes\RPY\VN_DGS_DEMO"
+dir = "C:\Codes\RPY\VN_HerWitch"
 remove_rpyc_files(dir)
