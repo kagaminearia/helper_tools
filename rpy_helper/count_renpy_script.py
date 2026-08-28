@@ -163,8 +163,8 @@ def clean_text(text: str) -> str:
 def count_text(text: str, mode: str) -> int:
     text = clean_text(text)
     if mode == "characters":
-        # Literal string length: Chinese/English punctuation and spaces count.
-        return len(text)
+        # return len(text)
+        return sum(1 for ch in text if not ch.isspace())
     # Chinese characters + English words + number groups; punctuation excluded.
     return len(HAN_RE.findall(text)) + len(WORD_OR_NUMBER_RE.findall(text))
 

@@ -16,7 +16,11 @@ HEADERS = {
 
 
 def fetch_html(url: str) -> str:
-    response = requests.get(url, headers=HEADERS, timeout=15)
+    response = requests.get(
+        url,
+        headers=HEADERS,
+        timeout=(5, 15),
+    )
     response.raise_for_status()
 
     response.encoding = response.apparent_encoding
@@ -84,6 +88,11 @@ def parse_chapter_text(chapter_html: str) -> tuple[str, str]:
 def scrape_novel(index_url: str, output_path: str, start_chapter: int = 1) -> None:
     index_html = fetch_html(index_url)
     chapter_links = parse_chapter_links(index_html, index_url)
+    print("HTML length:", len(index_html))
+    print("First 500 chars:")
+    print(index_html[:500])
+
+    print("Found chapter links:", len(chapter_links))
 
     # 从指定章节开始
     chapter_links = chapter_links[start_chapter - 1:]
@@ -114,5 +123,5 @@ def scrape_novel(index_url: str, output_path: str, start_chapter: int = 1) -> No
                 print(f"  Request failed: {e}")
 
 if __name__ == "__main__":
-    index_url = "https://www.52shuku.net/chongsheng/b/h7Sm.html"
+    index_url = "https://www.52shuku.net/jiakong/17_b/bkeF2.html"
     scrape_novel(index_url, "novel.txt")
