@@ -45,15 +45,12 @@ def parse_chapter_links(index_html: str, base_url: str) -> list[tuple[str, str]]
     return chapters
 
 
-def parse_chapter_text(chapter_html: str) -> tuple[str, str]:
+def parse_chapter_text(chapter_html: str) -> str:
     soup = BeautifulSoup(chapter_html, "html.parser")
 
-    title_tag = soup.select_one("h1#nr_title")
-    title = title_tag.get_text(strip=True) if title_tag else "未知章节"
-
-    article = soup.select_one("article#nr1")
+    article = soup.select_one("article.article-content")
     if article is None:
-        return title, ""
+        return ""
 
     # 先找到分页栏
     pagination = article.select_one("div.pagination2")
@@ -72,17 +69,9 @@ def parse_chapter_text(chapter_html: str) -> tuple[str, str]:
         if not text:
             continue
 
-        skip_keywords = [
-            "哦豁，小伙伴们如果觉得52书库不错",
-            "传送门：",
-        ]
-
-        if any(keyword in text for keyword in skip_keywords):
-            continue
-
         paragraphs.append(text)
 
-    return title, "\n\n".join(paragraphs)
+    return "\n\n".join(paragraphs)
 
 
 def scrape_novel(index_url: str, output_path: str, start_chapter: int = 1) -> None:
@@ -107,7 +96,7 @@ def scrape_novel(index_url: str, output_path: str, start_chapter: int = 1) -> No
 
             try:
                 chapter_html = fetch_html(page_url)
-                real_title, text = parse_chapter_text(chapter_html)
+                text = parse_chapter_text(chapter_html)
 
                 if not text:
                     print(f"  Warning: no text found")
@@ -117,11 +106,11 @@ def scrape_novel(index_url: str, output_path: str, start_chapter: int = 1) -> No
                 f.write(text)
                 f.write("\n")
 
-                time.sleep(6)
+                time.sleep(5)
 
             except requests.RequestException as e:
                 print(f"  Request failed: {e}")
 
 if __name__ == "__main__":
-    index_url = "https://www.52shuku.net/jiakong/17_b/bkeF2.html"
+    index_url = "https://www.52shuku.net/jiakong/hurE.html"
     scrape_novel(index_url, "novel.txt")

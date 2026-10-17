@@ -26,6 +26,12 @@ def fetch_chapter_selenium(driver, url):
     except:
         title = "未知章节"
 
+    # 删除页面顶部的章节标题和作者信息，防止重复
+    for elem in txtnav_div.find_elements(
+        By.CSS_SELECTOR, "h1.hide720, div.txtinfo.hide720"
+    ):
+        driver.execute_script("arguments[0].remove();", elem)
+
     # 删除广告 div
     for ad_div in txtnav_div.find_elements(By.CSS_SELECTOR, "#txtright, .contentadv, .bottom-ad"):driver.execute_script("""
         var element = arguments[0];
@@ -46,15 +52,18 @@ def fetch_chapter_selenium(driver, url):
     return title, content
 
 
-def build_book_selenium(link_file, output_file):
+def build_book_selenium(link_file, output_file, start_index=1):
     # default driver
     driver = webdriver.Chrome()
 
     with open(link_file, "r", encoding="utf-8") as f:
         urls = [line.strip() for line in f if line.strip()]
 
+    if not 1 <= start_index <= len(urls):
+        raise ValueError(f"起始序号必须在 1 到 {len(urls)} 之间")
+
     with open(output_file, "w", encoding="utf-8") as book:
-        for i, url in enumerate(urls, 1):
+        for i, url in enumerate(urls[start_index - 1:], start_index):
             print(f"get {i}/{len(urls)}: {url}")
 
             try:
@@ -74,4 +83,10 @@ def build_book_selenium(link_file, output_file):
 if __name__ == "__main__":
     filename = "chapters.txt"
     output = "output.txt"
-    build_book_selenium(filename,output)
+    start_input = input("从第几个链接开始读取？（直接回车默认从第1个开始）：").strip()
+    try:
+        start_index = int(start_input) if start_input else 1
+    except ValueError:
+        raise ValueError("请输入有效的整数序号")
+
+    build_book_selenium(filename, output, start_index)

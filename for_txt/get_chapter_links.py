@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-url = "https://www.69shuba.com/book/43256/"
+url = "https://www.69shuba.com/book/79740/"
 headers = {
     "User-Agent": "Mozilla/5.0"
 }
@@ -31,6 +31,6 @@ chapter_links = driver.find_elements(By.CSS_SELECTOR, "#catalog a")
 with open("chapters.txt", "w", encoding="utf-8") as f:
     for a in chapter_links:
         # remove invalid links
-        if "第" not in a.text:
-            continue
+        # if "第" not in a.text:
+        #     continue
         f.write(urljoin(url, a.get_attribute("href")) + "\n")
